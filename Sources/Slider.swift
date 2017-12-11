@@ -278,7 +278,7 @@ open class Slider : UIControl {
         filter.antialiasingRadius = scale / 2
         filter.inputImage = CIImage(cgImage: inputImage.cgImage!)
         
-        let outputImage = filter.outputImage!.cropped(to: CGRect(x: 0, y: 0, width: inputImage.size.width * scale, height: inputImage.size.height * scale))
+      let outputImage = filter.outputImage!.cropping(to: CGRect(x: 0, y: 0, width: inputImage.size.width * scale, height: inputImage.size.height * scale))
         let cgImage = context.createCGImage(outputImage, from: outputImage.extent)!
 
         filterView.image = UIImage(cgImage: cgImage, scale: scale, orientation: .up)

@@ -27,7 +27,7 @@ class ThresholdFilter: CIFilter {
     @objc
     var threshold: CGFloat = 0.75
     
-    private let filterKernel = CIColorKernel(source: """
+    private let filterKernel = CIColorKernel(string: """
 kernel vec4 thresholdFilter(__sample image, float threshold) {
     float luma = (image.r * 0.2126) + (image.g * 0.7152) + (image.b * 0.0722);
     return (luma > threshold) ? vec4(1.0, 1.0, 1.0, 1.0) : vec4(0.0, 0.0, 0.0, 0.0);
@@ -41,7 +41,7 @@ kernel vec4 thresholdFilter(__sample image, float threshold) {
 
     override var outputImage : CIImage? {
         guard let inputImage = inputImage, let filterKernel = filterKernel else { return nil }
-        return filterKernel.apply(extent: inputImage.extent, arguments: [inputImage, threshold])
+      return filterKernel.apply(withExtent: inputImage.extent, arguments: [inputImage, threshold])
     }
     
 }
@@ -63,15 +63,15 @@ class MetaballFilter : CIFilter {
         var image = CIFilter(name: "CIColorControls", withInputParameters: [kCIInputBrightnessKey: 1, kCIInputSaturationKey: 0, kCIInputContrastKey: 0, kCIInputImageKey: inputImage])?.outputImage
         
         // blur
-        image = image?.applyingGaussianBlur(sigma: Double(blurRadius))
+      image = image?.applyingGaussianBlur(withSigma: Double(blurRadius))
         
         // threshold
         ThresholdFilter.register()
-        image = image?.applyingFilter("FLDThresholdFilter", parameters: ["threshold": threshold])
+      image = image?.applyingFilter("FLDThresholdFilter", withInputParameters: ["threshold": threshold])
 
         // invert
         if let backgroundColor = backgroundColor {
-            image = image?.applyingFilter("CIFalseColor", parameters: ["inputColor0": CIColor(color: .white), "inputColor1": CIColor(color: backgroundColor)])
+          image = image?.applyingFilter("CIFalseColor", withInputParameters: ["inputColor0": CIColor(color: .white), "inputColor1": CIColor(color: backgroundColor)])
         }
 
         // antialiasing

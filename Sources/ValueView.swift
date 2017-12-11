@@ -65,9 +65,9 @@ class ValueView : UIView {
         set {
             // apply centered horizontal alignment
             let string = newValue?.mutableCopy() as! NSMutableAttributedString
-            let paragraph = (string.attribute(.paragraphStyle, at: 0, effectiveRange: nil) as? NSParagraphStyle ?? NSParagraphStyle()).mutableCopy() as! NSMutableParagraphStyle
+            let paragraph = (string.attribute(NSParagraphStyleAttributeName, at: 0, effectiveRange: nil) as? NSParagraphStyle ?? NSParagraphStyle()).mutableCopy() as! NSMutableParagraphStyle
             paragraph.alignment = .center
-            string.addAttribute(.paragraphStyle, value: paragraph, range: NSMakeRange(0, string.length))
+            string.addAttribute(NSParagraphStyleAttributeName, value: paragraph, range: NSMakeRange(0, string.length))
             textLabel.attributedText = string
         }
     }
