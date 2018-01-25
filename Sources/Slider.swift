@@ -32,6 +32,8 @@ open class Slider : UIControl {
     case thick
   }
   
+  open var outerFillValueViewColor: UIColor?
+  
   public var layoutType: Layout = .thick
     
     open var locale: Locale? {
@@ -124,7 +126,7 @@ open class Slider : UIControl {
     }
     
     private func updateValueViewColor() {
-        valueView.outerFillColor = contentViewColor
+        valueView.outerFillColor = outerFillValueViewColor ?? contentViewColor
         valueView.innerFillColor = valueViewColor
     }
 
