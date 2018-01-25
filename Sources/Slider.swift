@@ -355,7 +355,7 @@ open class Slider : UIControl {
     
     // MARK: - Filter View
     
-    private let filterView = UIImageView()
+    public var filterView = UIImageView()
     private let filter = MetaballFilter()
     private var filterViewMask: UIImage?
     private let context = CIContext()
