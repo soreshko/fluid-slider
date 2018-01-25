@@ -26,6 +26,13 @@ private func isAnimationAllowed() -> Bool {
 }
 
 open class Slider : UIControl {
+  
+  public enum Layout {
+    case thin
+    case thick
+  }
+  
+  public var layoutType: Layout = .thick
     
     open var locale: Locale? {
         didSet {
@@ -258,7 +265,17 @@ open class Slider : UIControl {
     
     private func layoutBackgroundImage() {
         let inset = UIEdgeInsets(top: min(0, shadowOffset.height - shadowBlur), left: min(0, shadowOffset.width - shadowBlur), bottom: max(0, shadowOffset.height + shadowBlur) * -1, right: max(0, shadowOffset.width + shadowBlur) * -1)
-        backgroundImageView.frame = UIEdgeInsetsInsetRect(self.bounds, inset)
+      
+      let _rect: CGRect
+      switch layoutType {
+      case .thick:
+        _rect = self.bounds
+      case .thin:
+        let part = self.bounds.size.height / 4
+        _rect = CGRect(x: 0, y: part, width: self.bounds.size.width, height: part * 2)
+      }
+      
+        backgroundImageView.frame = UIEdgeInsetsInsetRect(_rect, inset)
         backgroundImageView.image = UIGraphicsImageRenderer(bounds: backgroundImageView.bounds).image(actions: { context in
             if let color = shadowColor {
                 context.cgContext.setShadow(offset: shadowOffset, blur: shadowBlur, color: color.cgColor)
@@ -286,7 +303,7 @@ open class Slider : UIControl {
         let x = touch.location(in: self).x
 		isSliderTracking = true
         fraction = fractionForPositionX(x)
-        valueView.animateTrackingBegin()
+      valueView.animateTrackingBegin(layout: layoutType)
         sendActions(for: .valueChanged)
         didBeginTracking?(self)
         return result
@@ -346,7 +363,13 @@ open class Slider : UIControl {
         
         let scale = UIScreen.main.scale
         let radius: CGFloat = UIScreen.main.bounds.width >= 414 ? kBlurRadiusIphonePlus : kBlurRadiusDefault
-        let bottomMargin: CGFloat = 10
+        let bottomMargin: CGFloat
+      switch layoutType {
+      case .thick:
+        bottomMargin = 10
+      case .thin:
+        bottomMargin = 18
+      }
         let offsetY = -contentView.bounds.height / 2
         let bounds = CGRect(x: valueView.frame.origin.x, y: offsetY, width: valueView.frame.size.width, height: -offsetY + bottomMargin).insetBy(dx: -radius, dy: 0)
 

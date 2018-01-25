@@ -93,8 +93,15 @@ class ValueView : UIView {
     private let shapeView = UIView()
     public var animationFrame: (() -> ())?
     
-    func animateTrackingBegin() {
-        let topY = -shapeView.bounds.height - 4
+  func animateTrackingBegin(layout: Slider.Layout) {
+    let topY: CGFloat
+    switch layout {
+    case .thick:
+      topY = -shapeView.bounds.height - ValueView.kLayoutMarginInset
+    case .thin:
+      topY = -shapeView.bounds.height * 0.6 - ValueView.kLayoutMarginInset
+    }
+    
         
         if let animation = POPSpringAnimation(propertyNamed: kPOPLayerPositionY) {
             animation.toValue = topY + shapeView.bounds.midY
